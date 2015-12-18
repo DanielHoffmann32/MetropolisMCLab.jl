@@ -18,6 +18,10 @@ Vharmonic(x::Float64, a::Float64=1., b::Float64=0.) = a*(x-b)^2
 #a simple move function
 DX(dxmax::Float64) = dxmax * 2. * (rand()-0.5)
 
+#a move function for a periodic system on [0,2π[
+xtry_p(xold::Float64, dxmax::Float64) = 
+    mod2pi(xold + dxmax * 2. * (rand()-0.5))
+
 #-------------------------------------------------------------
 
 #         1D-Metropolis Monte Carlo (MC) function 
