@@ -2,7 +2,7 @@ module MetropolisMCLab
 
 # package code goes here
 export Vharmonic,
-DX,
+xtry, xtry_p,
 OneDimMetropolisMC
 
 # Metropolis MC code -----------------------------
@@ -22,12 +22,6 @@ xtry(xold::Float64, dxmax::Float64) =
 #a move function for a periodic system on [0,2π[
 xtry_p(xold::Float64, dxmax::Float64) = 
     mod2pi(xold + dxmax * 2. * (rand()-0.5))
-
-#-------------------------------------------------------------
-
-#         1D-Metropolis Monte Carlo (MC) function 
-
-#-------------------------------------------------------------
 
 #-------------------------------------------------------------
 
