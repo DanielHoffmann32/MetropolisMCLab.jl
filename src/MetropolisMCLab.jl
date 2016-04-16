@@ -13,7 +13,7 @@ dists2D
 
 #additional packages that we need
 using StatsBase
-using Distributions
+using Distributions, DataFrames
 using HypothesisTests
 
 #harmonic potential in 1D
