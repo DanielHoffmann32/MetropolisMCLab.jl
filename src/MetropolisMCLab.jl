@@ -1,7 +1,9 @@
 module MetropolisMCLab
 
 # package code goes here
-export Vharmonic, Vharmonic2D, Vcos2D, Vmultiminima2D,
+export block_average,
+Vharmonic, Vharmonic2D,
+Vflat2D, Vcos2D, Vmultiminima2D,
 xtry, xtry_p, rtry_p, rtry,
 OneDimMetropolisMC,
 TwoDimMetropolisMC,
@@ -22,6 +24,9 @@ Vharmonic(x::Float64, a::Float64=1., b::Float64=0.) = a*(x-b)^2
 #harmonic potential in 2D
 Vharmonic2D(r::Array{Float64,1}, a::Float64=1., b::Float64=0., c::Float64=0.) =
     a*((r[1]-b)^2+(r[2]-c)^2)
+
+#flat potential in 2D
+Vflat2D(r::Array{Float64,1}) = 0.
 
 #cosine multiwell potential in 2D
 Vcos2D(r::Array{Float64,1}) = cos(r[1])*cos(r[2])
@@ -108,6 +113,39 @@ function expansion_clustering(coors::Array{Float64,2}, ext::Array{Float64,1}, r:
         end
     end
     return traj_assigned
+end
+
+"""
+Splits a y-trajectory of length N into M consecutive blocks of size n. n takes values 1, 1+dn, 1+2*dn, ... 
+For each block size: computes averages <y> on each block and then standard error of the mean from BSE = sigma(<y>)/\sqrt{M}.
+
+Input:
+
+  - y: quantity computed along a trajectory
+
+  - Mmin: minimum number of blocks
+
+  - dn Increment of block size
+
+Output:
+
+  - BSE data frame, with columns n (block sizes) and BSE (block average standard errors)
+  
+"""
+function block_average(y::Array{Float64,1};
+                       Mmin::Int64=10,
+                       dn::Int64=100)
+    N = length(y)
+    ns = 1:dn:(N/Mmin)
+    BSE = DataFrame(n = collect(ns), bse = zeros(length(ns)))
+    j = 1
+    for n in ns
+        M = N/n
+        BSE[j,:n] = n
+        BSE[j,:bse] = std(map(i -> mean(y[i:(i+n-1)]), 1:n:(N-n)))/sqrt(M)
+        j += 1
+    end
+    BSE #block average standard error as function of block size n
 end
 
 #-------------------------------------------------------------
