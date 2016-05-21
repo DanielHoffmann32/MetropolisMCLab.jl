@@ -1,7 +1,7 @@
 module MetropolisMCLab
 
 # package code goes here
-export block_average,
+export block_averages,
 Vharmonic, Vharmonic2D,
 Vflat2D, Vcos2D, Vmultiminima2D,
 xtry, xtry_p, rtry_p, rtry,
@@ -132,15 +132,15 @@ Output:
   - BSE data frame, with columns n (block sizes) and BSE (block average standard errors)
   
 """
-function block_average(y::Array{Float64,1};
+function block_averages(y::Array{Float64,1};
                        Mmin::Int64=10,
                        dn::Int64=100)
     N = length(y)
-    ns = 1:dn:(N/Mmin)
+    ns = 1:dn:div(N,Mmin)
     BSE = DataFrame(n = collect(ns), bse = zeros(length(ns)))
     j = 1
     for n in ns
-        M = N/n
+        M = div(N,n)
         BSE[j,:n] = n
         BSE[j,:bse] = std(map(i -> mean(y[i:(i+n-1)]), 1:n:(N-n)))/sqrt(M)
         j += 1
