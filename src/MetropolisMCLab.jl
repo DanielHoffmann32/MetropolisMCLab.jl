@@ -116,8 +116,10 @@ function expansion_clustering(coors::Array{Float64,2}, ext::Array{Float64,1}, r:
 end
 
 """
-Splits a y-trajectory of length N into M consecutive blocks of size n. n takes values 1, 1+dn, 1+2*dn, ... 
-For each block size: computes averages <y> on each block and then standard error of the mean from BSE = sigma(<y>)/\sqrt{M}.
+Splits a y-trajectory of length N into M consecutive blocks of size n.
+n takes values 1, 1+dn, 1+2*dn, ... 
+For each block size: computes averages <y> on each block and then
+standard error of the mean from ``BSE = σ(<y>)/√M``.
 
 Input:
 
@@ -129,12 +131,12 @@ Input:
 
 Output:
 
-  - BSE data frame, with columns n (block sizes) and BSE (block average standard errors)
-  
+  - BSE data frame, with columns n (block sizes) and BSE
+    (block average standard errors)
 """
 function block_averages(y::Array{Float64,1};
-                       Mmin::Int64=10,
-                       dn::Int64=100)
+                        Mmin::Int64=10,
+                        dn::Int64=100)
     N = length(y)
     ns = 1:dn:div(N,Mmin)
     BSE = DataFrame(n = collect(ns), bse = zeros(length(ns)))
@@ -145,7 +147,7 @@ function block_averages(y::Array{Float64,1};
         BSE[j,:bse] = std(map(i -> mean(y[i:(i+n-1)]), 1:n:(N-n)))/sqrt(M)
         j += 1
     end
-    BSE #block average standard error as function of block size n
+    return BSE #block average standard error as function of block size n
 end
 
 #-------------------------------------------------------------
