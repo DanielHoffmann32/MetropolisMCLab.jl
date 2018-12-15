@@ -19,39 +19,39 @@ using Distributions, DataFrames
 using HypothesisTests
 
 #harmonic potential in 1D
-Vharmonic(x::Float64, a::Float64=1., b::Float64=0.) = a*(x-b)^2
+Vharmonic(x::Float64, a::Float64=1.0, b::Float64=0.0) = a*(x-b)^2
 
 #harmonic potential in 2D
-Vharmonic2D(r::Array{Float64,1}, a::Float64=1., b::Float64=0., c::Float64=0.) =
+Vharmonic2D(r::Array{Float64,1}, a::Float64=1.0, b::Float64=0.0, c::Float64=0.0) =
     a*((r[1]-b)^2+(r[2]-c)^2)
 
 #flat potential in 2D
-Vflat2D(r::Array{Float64,1}) = 0.
+Vflat2D(r::Array{Float64,1}) = 0.0
 
 #cosine multiwell potential in 2D
 Vcos2D(r::Array{Float64,1}) = cos(r[1])*cos(r[2])
 
 #multiminima potential in 2D
-Vmultiminima2D(r::Array{Float64,1}, a::Float64=0.02, b::Float64=0., c::Float64=0.) =
+Vmultiminima2D(r::Array{Float64,1}, a::Float64=0.02, b::Float64=0.0, c::Float64=0.0) =
     a*((r[1]-b)^2+(r[2]-c)^2) + cos(r[1])*cos(r[2])
 
 #a simple move function in 1D
 xtry(xold::Float64, dxmax::Float64) = 
-    xold + dxmax * 2. * (rand()-0.5)
+    xold + dxmax * 2.0 * (rand()-0.5)
 
 # a move function for a periodic system on [0,2pi[
 xtry_p(xold::Float64, dxmax::Float64) = 
-    mod2pi(xold + dxmax * 2. * (rand()-0.5))
+    mod2pi(xold + dxmax * 2.0 * (rand()-0.5))
 
 # a move function for a periodic system on [0,2pi[ x [0,2pi[
 rtry_p(rold::Array{Float64,1}, drmax::Float64) = 
-    [mod2pi(rold[1] + drmax * 2. * (rand()-0.5));
-     mod2pi(rold[2] + drmax * 2. * (rand()-0.5))]
+    [mod2pi(rold[1] + drmax * 2.0 * (rand()-0.5));
+     mod2pi(rold[2] + drmax * 2.0 * (rand()-0.5))]
 
 # a move function for 2D system
 rtry(rold::Array{Float64,1}, drmax::Float64) = 
-    [rold[1] + drmax * 2. * (rand()-0.5); 
-     rold[2] + drmax * 2. * (rand()-0.5)]
+    [rold[1] + drmax * 2.0 * (rand()-0.5); 
+     rold[2] + drmax * 2.0 * (rand()-0.5)]
 
 #compute distances between ref-point (x_ref, y_ref) and points in array (x, y)
 function dists2D(x_ref::Float64, y_ref::Float64, x::Array{Float64,1}, y::Array{Float64,1})
